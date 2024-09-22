@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
@@ -17,6 +17,35 @@ import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
 
+// Personal
+import CreatePersonal from './pages/Personal/CreatePersonal';
+import ListPersonal from './pages/Personal/ListPersonal';
+import StatePersonal from './pages/Personal/StatePersonal';
+
+// ROLES
+import Create from './pages/Roles/Create';
+import List from './pages/Roles/List';
+import Edit from './pages/Roles/Edit';
+
+// Simulación de autenticación
+//const isAuthenticated = () => {
+// Aquí pones la lógica para verificar si el usuario está autenticado (token, sesión, etc.)
+//return !!localStorage.getItem('authToken'); // Ejemplo básico
+//};
+
+// Simulación temporal de autenticación
+const isAuthenticated = () => {
+  return true; // Permite el acceso al dashboard temporalmente
+};
+
+// Componente para proteger rutas
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/auth/signin" replace />;
+  }
+  return children;
+};
+
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
@@ -32,118 +61,210 @@ function App() {
   return loading ? (
     <Loader />
   ) : (
-    <DefaultLayout>
-      <Routes>
-        <Route
-          index
-          element={
-            <>
-              <PageTitle title="eCommerce Dashboard | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+    <Routes>
+      {/* Páginas de autenticación fuera del layout */}
+      <Route
+        path="/auth/signin"
+        element={
+          <>
+            <PageTitle title="Signin | Centro Médico ZOE" />
+            <SignIn />
+          </>
+        }
+      />
+      <Route
+        path="/auth/signup"
+        element={
+          <>
+            <PageTitle title="Signup | Centro Médico ZOE" />
+            <SignUp />
+          </>
+        }
+      />
+
+      {/* Rutas protegidas dentro del layout */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="EHR | Centro Médico ZOE" />
               <ECommerce />
-            </>
-          }
-        />
-        <Route
-          path="/calendar"
-          element={
-            <>
-              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/calendar"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Calendar | Centro Médico ZOE" />
               <Calendar />
-            </>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Profile | Centro Médico ZOE" />
               <Profile />
-            </>
-          }
-        />
-        <Route
-          path="/forms/form-elements"
-          element={
-            <>
-              <PageTitle title="Form Elements | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/forms/form-elements"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Form Elements | Centro Médico ZOE" />
               <FormElements />
-            </>
-          }
-        />
-        <Route
-          path="/forms/form-layout"
-          element={
-            <>
-              <PageTitle title="Form Layout | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/forms/form-layout"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Form Layout | Centro Médico ZOE" />
               <FormLayout />
-            </>
-          }
-        />
-        <Route
-          path="/tables"
-          element={
-            <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/tables"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Tables | Centro Médico ZOE" />
               <Tables />
-            </>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <>
-              <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Settings | Centro Médico ZOE" />
               <Settings />
-            </>
-          }
-        />
-        <Route
-          path="/chart"
-          element={
-            <>
-              <PageTitle title="Basic Chart | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/chart"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Basic Chart | Centro Médico ZOE" />
               <Chart />
-            </>
-          }
-        />
-        <Route
-          path="/ui/alerts"
-          element={
-            <>
-              <PageTitle title="Alerts | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ui/alerts"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Alerts | Centro Médico ZOE" />
               <Alerts />
-            </>
-          }
-        />
-        <Route
-          path="/ui/buttons"
-          element={
-            <>
-              <PageTitle title="Buttons | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ui/buttons"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Buttons | Centro Médico ZOE" />
               <Buttons />
-            </>
-          }
-        />
-        <Route
-          path="/auth/signin"
-          element={
-            <>
-              <PageTitle title="Signin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <SignIn />
-            </>
-          }
-        />
-        <Route
-          path="/auth/signup"
-          element={
-            <>
-              <PageTitle title="Signup | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <SignUp />
-            </>
-          }
-        />
-      </Routes>
-    </DefaultLayout>
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* <!-- EHR Section --> */}
+      {/* <!-- Personal Section --> */}
+      <Route
+        path="/personal/create"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Crear Personal | Centro Médico ZOE" />
+              <CreatePersonal />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/personal/list"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Lista de Personal | Centro Médico ZOE" />
+              <ListPersonal />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/personal/states"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Estados de Personal | Centro Médico ZOE" />
+              <StatePersonal />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* <!-- Role Section --> */}
+      <Route
+        path="/role/create"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Crear Rol | Centro Médico ZOE" />
+              <Create />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/role/list"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Lista de Roles | Centro Médico ZOE" />
+              <List />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/role/edit/:id"
+        element={
+          <ProtectedRoute>
+            <DefaultLayout>
+              <PageTitle title="Editar de Rol | Centro Médico ZOE" />
+              <Edit />
+            </DefaultLayout>
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   );
 }
 
