@@ -1,14 +1,17 @@
-import { CreateRole, UpdateRole } from '../interfaces/Role/roles.interface';
+import {
+  CreatePersonal,
+  UpdatePersonal,
+} from '../interfaces/Personal/personal.interface';
 import { API_URL } from './api';
 
-const API_URL_ROLES = `${API_URL}/roles`;
+const API_URL_PERSONAL = `${API_URL}/personal`;
 
 // Función para crear un rol
-export const createRoleRequest = async (role: CreateRole) => {
+export const createPersonalRequest = async (personal: CreatePersonal) => {
   try {
-    const response = await fetch(`${API_URL_ROLES}`, {
+    const response = await fetch(`${API_URL_PERSONAL}`, {
       method: 'POST',
-      body: JSON.stringify(role),
+      body: JSON.stringify(personal),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -20,7 +23,7 @@ export const createRoleRequest = async (role: CreateRole) => {
       // Throw an error with the status and message from the API
       throw {
         status: response.status,
-        message: data.message || 'Error al crear el rol',
+        message: data.message || 'Error al crear el personal',
       };
     }
 
@@ -31,42 +34,42 @@ export const createRoleRequest = async (role: CreateRole) => {
   }
 };
 // Función para obtener roles
-export const getRolesRequest = async () => {
+export const getAllPersonalRequest = async () => {
   try {
-    const response = await fetch(`${API_URL_ROLES}`);
+    const response = await fetch(`${API_URL_PERSONAL}`);
 
     // Chequear si la respuesta es válida
     if (!response.ok) {
-      throw new Error('Error al obtener los roles');
+      throw new Error('Error al obtener los personales');
     }
 
     // Convertir la respuesta en JSON
     return await response.json();
   } catch (error) {
-    console.error('Error en getRoleRequest:', error);
+    console.error('Error en getAllPersonalRequest:', error);
     throw error;
   }
 };
 // Función para un rol
-export const getRoleRequest = async (id: number) => {
+export const getPersonalRequest = async (id: number) => {
   try {
-    const response = await fetch(`${API_URL_ROLES}/find/${id}`);
+    const response = await fetch(`${API_URL_PERSONAL}/find/${id}`);
 
     // Chequear si la respuesta es válida
     if (!response.ok) {
-      throw new Error('Error al obtener el rol');
+      throw new Error('Error al obtener el personal');
     }
 
     // Convertir la respuesta en JSON
     return await response.json();
   } catch (error) {
-    console.error('Error en getRoleRequest:', error);
+    console.error('Error en getPersonalRequest:', error);
     throw error;
   }
 };
-export const deleteRoleRequest = async (id: number) => {
+export const deletePersonalRequest = async (id: number) => {
   try {
-    const response = await fetch(`${API_URL_ROLES}/${id}`, {
+    const response = await fetch(`${API_URL_PERSONAL}/${id}`, {
       method: 'DELETE',
     });
 
@@ -74,7 +77,7 @@ export const deleteRoleRequest = async (id: number) => {
     if (response.status === 204) {
       return {
         status: 204,
-        message: 'Role deleted successfully',
+        message: 'Personal deleted successfully',
       };
     }
 
@@ -85,22 +88,25 @@ export const deleteRoleRequest = async (id: number) => {
     if (!response.ok) {
       throw {
         status: response.status,
-        message: data.message || 'Error al eliminar el rol',
+        message: data.message || 'Error al eliminar personal',
       };
     }
 
     return data;
   } catch (error) {
-    console.error('Error en deleteRoleRequest:', error);
+    console.error('Error en deletePersonalRequest:', error);
     throw error;
   }
 };
 // Función para editar un rol
-export const updateRoleRequest = async (id: number, role: UpdateRole) => {
+export const updatePersonalRequest = async (
+  id: number,
+  personal: UpdatePersonal,
+) => {
   try {
-    const response = await fetch(`${API_URL_ROLES}/${id}`, {
+    const response = await fetch(`${API_URL_PERSONAL}/${id}`, {
       method: 'PATCH',
-      body: JSON.stringify(role),
+      body: JSON.stringify(personal),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -110,20 +116,20 @@ export const updateRoleRequest = async (id: number, role: UpdateRole) => {
       // Throw an error with the status and message from the API
       throw {
         status: response.status,
-        message: data.message || 'Error al actualizar el rol',
+        message: data.message || 'Error al actualizar personal',
       };
     }
 
     return data;
   } catch (error) {
-    console.error('Error en updateRoleRequest:', error);
+    console.error('Error en updatePersonalRequest:', error);
     throw error;
   }
 };
 // Función para actualizar estado de un rol
-export const updateRoleStateRequest = async (id: number) => {
+export const updatePersonalStateRequest = async (id: number) => {
   try {
-    const response = await fetch(`${API_URL_ROLES}/state/${id}`, {
+    const response = await fetch(`${API_URL_PERSONAL}/state/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -133,13 +139,13 @@ export const updateRoleStateRequest = async (id: number) => {
     if (!response.ok) {
       throw {
         status: response.status,
-        message: data.message || 'Error al actualizar el estado del rol',
+        message: data.message || 'Error al actualizar el estado del personal',
       };
     }
 
     return data;
   } catch (error) {
-    console.error('Error en updateRoleStateRequest:', error);
+    console.error('Error en updatePersonalStateRequest:', error);
     throw error;
   }
 };

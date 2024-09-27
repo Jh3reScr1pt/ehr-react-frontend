@@ -1,8 +1,6 @@
 import { useState } from 'react'; // Importar el nuevo componente
 import Loader from '../../common/Loader';
 import Table from '../Table';
-import { useRoles } from '../../context/Role/useRoles';
-import { useRoleHandlers } from '../../handlers/roleHandlers';
 import { useIconToggles } from '../../hooks/useIconToggles';
 import {
   CloseCircleFilled,
@@ -14,16 +12,18 @@ import {
   ReloadOutlined,
 } from '@ant-design/icons';
 import SearchAndCreateBar from '../SearchAndCreateBar';
+import { useSpecialties } from '../../context/Specialty/useSpecialties';
+import { useSpecialtyHandlers } from '../../handlers/specialtyHandlers';
 
-const RoleList = () => {
-  const { roles, loading, error } = useRoles();
+const SpecialtyList = () => {
+  const { specialties, loading, error } = useSpecialties();
   const {
     handleEditClick,
     handleDeactivate,
     handleReload,
     handleDelete,
-    handleInfoRoleSearch,
-  } = useRoleHandlers();
+    handleInfoSpecialtySearch,
+  } = useSpecialtyHandlers();
   const { iconStates, toggleIconState } = useIconToggles();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,9 +31,9 @@ const RoleList = () => {
   if (loading) return <Loader />;
   if (error) return <p>{error}</p>;
 
-  const headers = ['Nombre del Rol', 'Descripción', 'Estado', 'Acciones'];
-  const filteredRoles = roles.filter((role) =>
-    role.role_name.toLowerCase().startsWith(searchTerm.toLowerCase()),
+  const headers = ['Especialidad', 'Descripción', 'Estado', 'Acciones'];
+  const filteredSpecialties = specialties.filter((specialty) =>
+    specialty.specialty_name.toLowerCase().startsWith(searchTerm.toLowerCase()),
   );
 
   return (
@@ -42,65 +42,71 @@ const RoleList = () => {
       <SearchAndCreateBar
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-        onSearchClick={handleInfoRoleSearch}
-        createRoute="/role/create"
-        createButtonText="Crear Rol"
+        onSearchClick={handleInfoSpecialtySearch}
+        createRoute="/specialty/create"
+        createButtonText="Crear Esp"
       />
 
       {/* Tabla */}
       <div className="flex flex-col gap-10 mt-4">
         <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
           <Table headers={headers}>
-            {filteredRoles.map((role, key) => (
+            {filteredSpecialties.map((specialty, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {role.role_name}
+                    {specialty.specialty_name}
                   </h5>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {role.role_description ? role.role_description : 'Vacío'}
+                    {specialty.specialty_description
+                      ? specialty.specialty_description
+                      : 'Vacío'}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p
                     className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                      role.isActive
+                      specialty.isActive
                         ? 'bg-success text-success'
                         : 'bg-danger text-danger'
                     }`}
                   >
-                    {role.isActive ? 'Activo' : 'Inactivo'}
+                    {specialty.isActive ? 'Activo' : 'Inactivo'}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
-                    {role.isActive ? (
+                    {specialty.isActive ? (
                       <>
                         <button
-                          onMouseDown={() => toggleIconState(role.id, 'edit')}
+                          onMouseDown={() =>
+                            toggleIconState(specialty.id, 'edit')
+                          }
                           onMouseUp={() => {
-                            toggleIconState(role.id, 'edit');
-                            handleEditClick(role.id);
+                            toggleIconState(specialty.id, 'edit');
+                            handleEditClick(specialty.id);
                           }}
                           className="hover:text-primary"
                         >
-                          {iconStates[role.id]?.edit ? (
+                          {iconStates[specialty.id]?.edit ? (
                             <EditFilled />
                           ) : (
                             <EditOutlined />
                           )}
                         </button>
                         <button
-                          onMouseDown={() => toggleIconState(role.id, 'close')}
+                          onMouseDown={() =>
+                            toggleIconState(specialty.id, 'close')
+                          }
                           onMouseUp={() => {
-                            toggleIconState(role.id, 'close');
-                            handleDeactivate(role.id);
+                            toggleIconState(specialty.id, 'close');
+                            handleDeactivate(specialty.id);
                           }}
                           className="hover:text-primary"
                         >
-                          {iconStates[role.id]?.close ? (
+                          {iconStates[specialty.id]?.close ? (
                             <CloseCircleFilled />
                           ) : (
                             <CloseCircleOutlined />
@@ -110,20 +116,22 @@ const RoleList = () => {
                     ) : (
                       <>
                         <button
-                          onMouseUp={() => handleReload(role.id)}
+                          onMouseUp={() => handleReload(specialty.id)}
                           className="hover:text-primary"
                         >
                           <ReloadOutlined />
                         </button>
                         <button
-                          onMouseDown={() => toggleIconState(role.id, 'delete')}
+                          onMouseDown={() =>
+                            toggleIconState(specialty.id, 'delete')
+                          }
                           onMouseUp={() => {
-                            toggleIconState(role.id, 'delete');
-                            handleDelete(role.id);
+                            toggleIconState(specialty.id, 'delete');
+                            handleDelete(specialty.id);
                           }}
                           className="hover:text-primary"
                         >
-                          {iconStates[role.id]?.delete ? (
+                          {iconStates[specialty.id]?.delete ? (
                             <DeleteFilled />
                           ) : (
                             <DeleteOutlined />
@@ -142,4 +150,4 @@ const RoleList = () => {
   );
 };
 
-export default RoleList;
+export default SpecialtyList;

@@ -1,8 +1,6 @@
-import { useState } from 'react'; // Importar el nuevo componente
+import { useState } from 'react';
 import Loader from '../../common/Loader';
 import Table from '../Table';
-import { useRoles } from '../../context/Role/useRoles';
-import { useRoleHandlers } from '../../handlers/roleHandlers';
 import { useIconToggles } from '../../hooks/useIconToggles';
 import {
   CloseCircleFilled,
@@ -14,16 +12,18 @@ import {
   ReloadOutlined,
 } from '@ant-design/icons';
 import SearchAndCreateBar from '../SearchAndCreateBar';
+import { usePersonal } from '../../context/Personal/usePersonal';
+import { usePersonalHandlers } from '../../handlers/personalHandlers';
 
-const RoleList = () => {
-  const { roles, loading, error } = useRoles();
+const PersonalList = () => {
+  const { personal, loading, error } = usePersonal();
   const {
     handleEditClick,
     handleDeactivate,
     handleReload,
     handleDelete,
-    handleInfoRoleSearch,
-  } = useRoleHandlers();
+    handleInfoPersonalSearch,
+  } = usePersonalHandlers();
   const { iconStates, toggleIconState } = useIconToggles();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,10 +31,32 @@ const RoleList = () => {
   if (loading) return <Loader />;
   if (error) return <p>{error}</p>;
 
-  const headers = ['Nombre del Rol', 'Descripción', 'Estado', 'Acciones'];
-  const filteredRoles = roles.filter((role) =>
-    role.role_name.toLowerCase().startsWith(searchTerm.toLowerCase()),
+  const headers = [
+    'Nombre(s)',
+    'Apellidos',
+    'CI',
+    'Correo',
+    'Estado',
+    'Acciones',
+  ];
+
+  const filteredPersonal = personal.filter((p) =>
+    p.first_name.toLowerCase().startsWith(searchTerm.toLowerCase()),
   );
+
+  // Tipar las funciones correctamente
+  const getFullName = (firstName: string, secondName?: string): string => {
+    return secondName ? `${firstName} ${secondName}` : firstName;
+  };
+
+  const getFullLastName = (
+    firstLastName: string,
+    secondLastName?: string,
+  ): string => {
+    return secondLastName
+      ? `${firstLastName} ${secondLastName}`
+      : firstLastName;
+  };
 
   return (
     <>
@@ -42,65 +64,71 @@ const RoleList = () => {
       <SearchAndCreateBar
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-        onSearchClick={handleInfoRoleSearch}
-        createRoute="/role/create"
-        createButtonText="Crear Rol"
+        onSearchClick={handleInfoPersonalSearch}
+        createRoute="/personal/create"
+        createButtonText="Crear Pers"
       />
 
       {/* Tabla */}
       <div className="flex flex-col gap-10 mt-4">
         <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
           <Table headers={headers}>
-            {filteredRoles.map((role, key) => (
+            {filteredPersonal.map((p, key) => (
               <tr key={key}>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
-                    {role.role_name}
+                    {getFullName(p.first_name, p.second_name)}
                   </h5>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {role.role_description ? role.role_description : 'Vacío'}
+                    {getFullLastName(p.first_last_name, p.second_last_name)}
                   </p>
+                </td>
+                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                  <p className="text-black dark:text-white">{p.ci}</p>
+                </td>
+                <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                  <p className="text-black dark:text-white">{p.email}</p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <p
                     className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
-                      role.isActive
+                      p.isActive
                         ? 'bg-success text-success'
                         : 'bg-danger text-danger'
                     }`}
                   >
-                    {role.isActive ? 'Activo' : 'Inactivo'}
+                    {p.isActive ? 'Activo' : 'Inactivo'}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
-                    {role.isActive ? (
+                    {p.isActive ? (
                       <>
                         <button
-                          onMouseDown={() => toggleIconState(role.id, 'edit')}
+                          onMouseDown={() => toggleIconState(p.id, 'edit')}
                           onMouseUp={() => {
-                            toggleIconState(role.id, 'edit');
-                            handleEditClick(role.id);
+                            toggleIconState(p.id, 'edit');
+                            handleEditClick(p.id);
                           }}
                           className="hover:text-primary"
                         >
-                          {iconStates[role.id]?.edit ? (
+                          {iconStates[p.id]?.edit ? (
                             <EditFilled />
                           ) : (
                             <EditOutlined />
                           )}
                         </button>
                         <button
-                          onMouseDown={() => toggleIconState(role.id, 'close')}
+                          onMouseDown={() => toggleIconState(p.id, 'close')}
                           onMouseUp={() => {
-                            toggleIconState(role.id, 'close');
-                            handleDeactivate(role.id);
+                            toggleIconState(p.id, 'close');
+                            handleDeactivate(p.id);
                           }}
                           className="hover:text-primary"
                         >
-                          {iconStates[role.id]?.close ? (
+                          {iconStates[p.id]?.close ? (
                             <CloseCircleFilled />
                           ) : (
                             <CloseCircleOutlined />
@@ -110,20 +138,20 @@ const RoleList = () => {
                     ) : (
                       <>
                         <button
-                          onMouseUp={() => handleReload(role.id)}
+                          onMouseUp={() => handleReload(p.id)}
                           className="hover:text-primary"
                         >
                           <ReloadOutlined />
                         </button>
                         <button
-                          onMouseDown={() => toggleIconState(role.id, 'delete')}
+                          onMouseDown={() => toggleIconState(p.id, 'delete')}
                           onMouseUp={() => {
-                            toggleIconState(role.id, 'delete');
-                            handleDelete(role.id);
+                            toggleIconState(p.id, 'delete');
+                            handleDelete(p.id);
                           }}
                           className="hover:text-primary"
                         >
-                          {iconStates[role.id]?.delete ? (
+                          {iconStates[p.id]?.delete ? (
                             <DeleteFilled />
                           ) : (
                             <DeleteOutlined />
@@ -142,4 +170,4 @@ const RoleList = () => {
   );
 };
 
-export default RoleList;
+export default PersonalList;

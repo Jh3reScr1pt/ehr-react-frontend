@@ -1,14 +1,17 @@
-import { CreateRole, UpdateRole } from '../interfaces/Role/roles.interface';
+import {
+  CreateSpecialty,
+  UpdateSpecialty,
+} from '../interfaces/Specialty/specialties.interface';
 import { API_URL } from './api';
 
-const API_URL_ROLES = `${API_URL}/roles`;
+const API_URL_SPECIALTIES = `${API_URL}/specialties`;
 
-// Función para crear un rol
-export const createRoleRequest = async (role: CreateRole) => {
+// Función para crear una especialidad
+export const createSpecialtyRequest = async (specialty: CreateSpecialty) => {
   try {
-    const response = await fetch(`${API_URL_ROLES}`, {
+    const response = await fetch(`${API_URL_SPECIALTIES}`, {
       method: 'POST',
-      body: JSON.stringify(role),
+      body: JSON.stringify(specialty),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -20,53 +23,53 @@ export const createRoleRequest = async (role: CreateRole) => {
       // Throw an error with the status and message from the API
       throw {
         status: response.status,
-        message: data.message || 'Error al crear el rol',
+        message: data.message || 'Error al crear la especialidad',
       };
     }
 
     return data;
   } catch (error) {
-    console.error('Error en createRoleRequest:', error);
+    console.error('Error en createSpecialtyRequest:', error);
     throw error;
   }
 };
-// Función para obtener roles
-export const getRolesRequest = async () => {
+// Función para obtener especialidades
+export const getSpecialtiesRequest = async () => {
   try {
-    const response = await fetch(`${API_URL_ROLES}`);
+    const response = await fetch(`${API_URL_SPECIALTIES}`);
 
     // Chequear si la respuesta es válida
     if (!response.ok) {
-      throw new Error('Error al obtener los roles');
+      throw new Error('Error al obtener las especialidades');
     }
 
     // Convertir la respuesta en JSON
     return await response.json();
   } catch (error) {
-    console.error('Error en getRoleRequest:', error);
+    console.error('Error en getSpecialtiesRequest:', error);
     throw error;
   }
 };
-// Función para un rol
-export const getRoleRequest = async (id: number) => {
+// Función para una especialidad
+export const getSpecialtyRequest = async (id: number) => {
   try {
-    const response = await fetch(`${API_URL_ROLES}/find/${id}`);
+    const response = await fetch(`${API_URL_SPECIALTIES}/find/${id}`);
 
     // Chequear si la respuesta es válida
     if (!response.ok) {
-      throw new Error('Error al obtener el rol');
+      throw new Error('Error al obtener la especialidad');
     }
 
     // Convertir la respuesta en JSON
     return await response.json();
   } catch (error) {
-    console.error('Error en getRoleRequest:', error);
+    console.error('Error en getSpecialtyRequest:', error);
     throw error;
   }
 };
-export const deleteRoleRequest = async (id: number) => {
+export const deleteSpecialtyRequest = async (id: number) => {
   try {
-    const response = await fetch(`${API_URL_ROLES}/${id}`, {
+    const response = await fetch(`${API_URL_SPECIALTIES}/${id}`, {
       method: 'DELETE',
     });
 
@@ -74,7 +77,7 @@ export const deleteRoleRequest = async (id: number) => {
     if (response.status === 204) {
       return {
         status: 204,
-        message: 'Role deleted successfully',
+        message: 'Specialty deleted successfully',
       };
     }
 
@@ -85,22 +88,25 @@ export const deleteRoleRequest = async (id: number) => {
     if (!response.ok) {
       throw {
         status: response.status,
-        message: data.message || 'Error al eliminar el rol',
+        message: data.message || 'Error al eliminar la especialidad',
       };
     }
 
     return data;
   } catch (error) {
-    console.error('Error en deleteRoleRequest:', error);
+    console.error('Error en deleteSpecialtyRequest:', error);
     throw error;
   }
 };
 // Función para editar un rol
-export const updateRoleRequest = async (id: number, role: UpdateRole) => {
+export const updateSpecialtyRequest = async (
+  id: number,
+  specialty: UpdateSpecialty,
+) => {
   try {
-    const response = await fetch(`${API_URL_ROLES}/${id}`, {
+    const response = await fetch(`${API_URL_SPECIALTIES}/${id}`, {
       method: 'PATCH',
-      body: JSON.stringify(role),
+      body: JSON.stringify(specialty),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -110,20 +116,20 @@ export const updateRoleRequest = async (id: number, role: UpdateRole) => {
       // Throw an error with the status and message from the API
       throw {
         status: response.status,
-        message: data.message || 'Error al actualizar el rol',
+        message: data.message || 'Error al actualizar la especialidad',
       };
     }
 
     return data;
   } catch (error) {
-    console.error('Error en updateRoleRequest:', error);
+    console.error('Error en updateSpecialtyRequest:', error);
     throw error;
   }
 };
 // Función para actualizar estado de un rol
-export const updateRoleStateRequest = async (id: number) => {
+export const updateSpecialtyStateRequest = async (id: number) => {
   try {
-    const response = await fetch(`${API_URL_ROLES}/state/${id}`, {
+    const response = await fetch(`${API_URL_SPECIALTIES}/state/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -133,13 +139,14 @@ export const updateRoleStateRequest = async (id: number) => {
     if (!response.ok) {
       throw {
         status: response.status,
-        message: data.message || 'Error al actualizar el estado del rol',
+        message:
+          data.message || 'Error al actualizar el estado de la especialidad',
       };
     }
 
     return data;
   } catch (error) {
-    console.error('Error en updateRoleStateRequest:', error);
+    console.error('Error en updateSpecialtyStateRequest:', error);
     throw error;
   }
 };

@@ -1,10 +1,10 @@
-import { useRoleHandlers } from '../../handlers/roleHandlers';
 import { useParams } from 'react-router-dom';
+import { useSpecialtyHandlers } from '../../handlers/specialtyHandlers';
 
-const RoleForm = () => {
+const SpecialtyForm = () => {
   const { id } = useParams<{ id: string }>();
-  const { role, handleChange, handleSubmit, handleCancel } =
-    useRoleHandlers().useRoleFormHandlers(id);
+  const { specialty, feedback, handleChange, handleSubmit, handleCancel } =
+    useSpecialtyHandlers().useSpecialtyFormHandlers(id);
 
   return (
     <div className="flex justify-center">
@@ -12,7 +12,7 @@ const RoleForm = () => {
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
-              Formulario de Rol
+              Formulario de Especialidad
             </h3>
           </div>
           <form onSubmit={handleSubmit}>
@@ -20,21 +20,21 @@ const RoleForm = () => {
               {/* Revisar 
               {feedback.error && (
                 <div className="mb-4.5 text-red-500">{feedback.error}</div>
-              )}
+              )}*/}
               {feedback.success && (
                 <div className="mb-4.5 text-green-500">{feedback.success}</div>
-              )}*/}
+              )}
 
               <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">
-                  Nombre del Rol
+                  Nombre de la Especialidad
                 </label>
                 <input
                   type="text"
-                  name="role_name"
-                  value={role.role_name}
+                  name="specialty_name"
+                  value={specialty.specialty_name}
                   onChange={handleChange}
-                  placeholder="Ingrese el nombre del Rol"
+                  placeholder="Ingrese el nombre de la Especialidad"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
                 />
               </div>
@@ -45,10 +45,10 @@ const RoleForm = () => {
                 </label>
                 <textarea
                   rows={6}
-                  name="role_description"
-                  value={role.role_description}
+                  name="specialty_description"
+                  value={specialty.specialty_description}
                   onChange={handleChange}
-                  placeholder="Ingrese la descripción del Rol"
+                  placeholder="Ingrese la descripción de la Especialidad"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
                 ></textarea>
               </div>
@@ -97,4 +97,4 @@ const RoleForm = () => {
   );
 };
 
-export default RoleForm;
+export default SpecialtyForm;
