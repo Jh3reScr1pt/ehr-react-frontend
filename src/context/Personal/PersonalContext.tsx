@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from 'react';
-import { PersonalContextValue } from '../../interfaces/Personal/PersonalContextValue';
 import { Props } from '../../interfaces/props/props.interface';
 import {
   CreatePersonal,
@@ -14,6 +13,7 @@ import {
   updatePersonalRequest,
   updatePersonalStateRequest,
 } from '../../api/personal';
+import { PersonalContextValue } from '../../interfaces/Personal/PersonalContextValue.interface';
 
 export const PersonalContext = createContext<PersonalContextValue>({
   personal: [],

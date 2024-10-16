@@ -1,54 +1,54 @@
 import { useNavigate } from 'react-router-dom';
 import { useToasts } from '../hooks/useToasts';
 import { useEffect, useState, ChangeEvent, FormEvent } from 'react';
-import { usePersonal } from '../context/Personal/usePersonal';
 import { CreatePersonal } from '../interfaces/Personal/personal.interface';
+import { usePatients } from '../context/Patient/UsePatient';
 
-export const usePersonalHandlers = () => {
+export const usePatientHandlers = () => {
   const {
-    updatePersonalState,
-    deletePersonal,
-    createPersonal,
-    updatePersonal,
-    getPersonal,
-  } = usePersonal();
+    updatePatientState,
+    deletePatient,
+    createPatient,
+    updatePatient,
+    getPatient,
+  } = usePatients();
   const { ToastSuccess, ToastInfo, ToastError } = useToasts();
   const navigate = useNavigate();
 
-  const handleEditClick = (personalId: number) => {
-    navigate(`/personal/edit/${personalId}`);
+  const handleEditClick = (patientId: number) => {
+    navigate(`/patients/edit/${patientId}`);
   };
 
-  const handleDeactivate = async (personalId: number) => {
+  const handleDeactivate = async (patientId: number) => {
     try {
-      const result = await updatePersonalState(personalId);
+      const result = await updatePatientState(patientId);
       result.success
-        ? ToastSuccess('Personal desactivado exitosamente')
+        ? ToastSuccess('Paciente desactivado exitosamente')
         : ToastInfo(result.message);
     } catch (error) {
       ToastError('Error al desactivar el personal');
     }
   };
 
-  const handleReload = async (personalId: number) => {
+  const handleReload = async (patientId: number) => {
     try {
-      const result = await updatePersonalState(personalId);
+      const result = await updatePatientState(patientId);
       result.success
-        ? ToastSuccess('Personal activado exitosamente')
+        ? ToastSuccess('Paciente activado exitosamente')
         : ToastInfo(result.message);
     } catch (error) {
-      ToastError('Error al activar el personal');
+      ToastError('Error al activar el paciente');
     }
   };
 
-  const handleDelete = async (personalId: number) => {
+  const handleDelete = async (patientId: number) => {
     try {
-      const result = await deletePersonal(personalId);
+      const result = await deletePatient(patientId);
       result.success
-        ? ToastSuccess('Personal eliminado exitosamente')
+        ? ToastSuccess('Paciente eliminado exitosamente')
         : ToastInfo(result.message);
     } catch (error) {
-      ToastError('Error al eliminar el personal');
+      ToastError('Error al eliminar el paciente');
     }
   };
 
@@ -56,17 +56,16 @@ export const usePersonalHandlers = () => {
     ToastInfo('Escribe el nombre que desea encontrar...');
   };
 
-  const usePersonalFormHandlers = (id?: string) => {
-    const [personal, setPersonal] = useState({
+  const usePatientFormHandlers = (id?: string) => {
+    const [patient, setPatient] = useState({
       first_name: '',
       second_name: '',
       first_last_name: '',
       second_last_name: '',
-      phone_number: '',
-      email: '',
-      password: '',
       ci: '',
-      roleId: 0,
+      phone_number: '',
+      address: '',
+      birth_date: new Date(),
     });
     const [feedback, setFeedback] = useState<{
       error: string | null;
@@ -78,19 +77,18 @@ export const usePersonalHandlers = () => {
 
     useEffect(() => {
       if (id) {
-        const loadPersonal = async () => {
+        const loadPatient = async () => {
           try {
-            const personalData = await getPersonal(Number(id));
-            setPersonal({
-              first_name: personalData.first_name,
-              second_name: personalData.second_name,
-              first_last_name: personalData.first_last_name,
-              second_last_name: personalData.second_last_name,
-              phone_number: personalData.phone_number,
-              email: personalData.email,
-              password: personalData.password,
-              ci: personalData.ci,
-              roleId: personalData.roleId,
+            const patientData = await getPatient(Number(id));
+            setPatient({
+              first_name: patientData.first_name,
+              second_name: patientData.second_name,
+              first_last_name: patientData.first_last_name,
+              second_last_name: patientData.second_last_name,
+              ci: patientData.ci,
+              phone_number: patientData.phone_number,
+              address: patientData.address,
+              birth_date: patientData.birth_date,
             });
           } catch (err) {
             setFeedback({
@@ -99,19 +97,17 @@ export const usePersonalHandlers = () => {
             });
           }
         };
-        loadPersonal();
+        loadPatient();
       }
     }, [id]);
 
     const handleChange = (
-      e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+      e: ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >,
     ) => {
       const { name, value } = e.target;
-      setPersonal((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleRoleChange = (roleId: number) => {
-      setPersonal((prev) => ({ ...prev, roleId }));
+      setPatient((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -122,18 +118,18 @@ export const usePersonalHandlers = () => {
         let response;
         let answer = '';
         if (id) {
-          response = await updatePersonal(Number(id), personal);
+          response = await updatePatient(Number(id), patient);
           answer = 'Cambios guardados';
         } else {
-          response = await createPersonal(personal);
-          answer = 'Personal creado exitosamente';
+          response = await createPatient(patient);
+          answer = 'Paciente registrado exitosamente';
         }
 
         const { success, message } = response;
         if (success) {
           setFeedback({ success: message, error: null });
           ToastSuccess(answer);
-          navigate('/personal/list');
+          navigate('/patients/list');
         } else {
           setFeedback({ error: message, success: null });
           ToastError(message);
@@ -147,10 +143,9 @@ export const usePersonalHandlers = () => {
     };
 
     const handleCancel = () => {
-      navigate('/personal/list');
+      navigate('/patients/list');
     };
 
-    // handlers/personalHandlers.ts
     const validateNames = (personal: CreatePersonal) => {
       const { first_name, first_last_name, second_last_name } = personal;
       const isNamesFilled =
@@ -166,16 +161,6 @@ export const usePersonalHandlers = () => {
       return isNamesFilled && areNamesValid;
     };
 
-    const generatePassword = (personal: CreatePersonal) => {
-      const { first_name, first_last_name, second_last_name, ci } = personal;
-      if (first_name && first_last_name && second_last_name && ci) {
-        const initials =
-          `${first_name[0]}${first_last_name[0]}${second_last_name[0]}`.toUpperCase();
-        return `${initials}${ci}`;
-      }
-      return '';
-    };
-
     const shouldDisableFields = (personal: CreatePersonal) => {
       const areNamesValid = validateNames(personal);
       return !areNamesValid;
@@ -187,16 +172,14 @@ export const usePersonalHandlers = () => {
     };
 
     return {
-      personal,
+      patient,
       feedback,
       handleChange,
       handleSubmit,
       handleCancel,
-      generatePassword,
       validateNames,
       shouldDisableFields,
       validateCI,
-      handleRoleChange,
     };
   };
 
@@ -206,6 +189,6 @@ export const usePersonalHandlers = () => {
     handleReload,
     handleDelete,
     handleInfoPersonalSearch,
-    usePersonalFormHandlers,
+    usePatientFormHandlers,
   };
 };
