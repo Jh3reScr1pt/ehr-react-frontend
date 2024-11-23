@@ -1,13 +1,18 @@
 import Breadcrumb from '../../../components/Breadcrumbs/Breadcrumb';
-import AppointmentCard from '../../../components/Cards/AppointmentCard';
-import DoctorCard from '../../../components/Cards/DoctorCard';
+import MedicalAppointmentList from '../../../components/Lists/MedicalAppointmentList';
+import { MedicalAppointmentProvider } from '../../../context/MedicalAppointment/MedicalAppointmentContext';
+import { PatientProvider } from '../../../context/Patient/PatientContext';
 
 const List = () => {
   return (
     <>
       <Breadcrumb pageName="Citas Médicas" />
-      <AppointmentCard />
-      <DoctorCard />
+
+      <MedicalAppointmentProvider>
+        <PatientProvider>
+          <MedicalAppointmentList />
+        </PatientProvider>
+      </MedicalAppointmentProvider>
     </>
   );
 };

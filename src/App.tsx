@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { IStaticMethods } from 'flyonui/flyonui';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
@@ -15,7 +17,6 @@ import Tables from './pages/Tables';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
-import { ToastContainer } from 'react-toastify';
 
 // AUTH
 import { AuthProvider } from './context/Auth/AuthContext';
@@ -40,11 +41,23 @@ import EditSpecialty from './pages/AdminPersonal/Specialties/Edit';
 import CreatePatient from './pages/AdminPatients/Patients/Create';
 import ListPatients from './pages/AdminPatients/Patients/List';
 import EditPatient from './pages/AdminPatients/Patients/Edit';
+import ProfilePatient from './pages/AdminPatients/Patients/Profile';
 
 // APPOINTMENTS
 import CreateAppointment from './pages/AdminAppointments/Appointments/Create';
 import ListAppointments from './pages/AdminAppointments/Appointments/List';
 import EditAppointment from './pages/AdminAppointments/Appointments/Edit';
+
+// HEALTH RECORDS
+import CreateHealthRecord from './pages/AdminHealthRecords/HealthRecords/Create';
+import ListHealthRecords from './pages/AdminHealthRecords/HealthRecords/List';
+import EditHealthRecord from './pages/AdminHealthRecords/HealthRecords/Edit';
+
+declare global {
+  interface Window {
+    HSStaticMethods: IStaticMethods;
+  }
+}
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,6 +70,14 @@ function App() {
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
+
+  useEffect(() => {
+    const loadFlyonui = async () => {
+      await import('flyonui/flyonui');
+      window.HSStaticMethods.autoInit();
+    };
+    loadFlyonui();
+  }, [pathname]);
 
   return loading ? (
     <Loader />
@@ -288,6 +309,15 @@ function App() {
               </DefaultLayout>
             }
           />
+          <Route
+            path="/patient/profile/:id"
+            element={
+              <DefaultLayout>
+                <PageTitle title="Información del Paciente | Centro Médico ZOE" />
+                <ProfilePatient />
+              </DefaultLayout>
+            }
+          />
           {/* <!-- Appointment Section --> */}
           <Route
             path="/appointment/create"
@@ -313,6 +343,34 @@ function App() {
               <DefaultLayout>
                 <PageTitle title="Editar Cita Médica | Centro Médico ZOE" />
                 <EditAppointment />
+              </DefaultLayout>
+            }
+          />
+          {/* <!-- Health Record Section --> */}
+          <Route
+            path="/health_record/create/:id"
+            element={
+              <DefaultLayout>
+                <PageTitle title="Crear Historia Clínica | Centro Médico ZOE" />
+                <CreateHealthRecord />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path="/health_record/list"
+            element={
+              <DefaultLayout>
+                <PageTitle title="Lista de Historias Clínicas | Centro Médico ZOE" />
+                <ListHealthRecords />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path="/health_record/edit/:id"
+            element={
+              <DefaultLayout>
+                <PageTitle title="Editar Historia Clínica | Centro Médico ZOE" />
+                <EditHealthRecord/>
               </DefaultLayout>
             }
           />

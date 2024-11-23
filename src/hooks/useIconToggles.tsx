@@ -3,12 +3,17 @@ import { useState } from 'react';
 
 export const useIconToggles = () => {
   const [iconStates, setIconStates] = useState<{
-    [key: number]: { edit: boolean; close: boolean; delete: boolean };
+    [key: number]: {
+      view: boolean;
+      edit: boolean;
+      close: boolean;
+      delete: boolean;
+    };
   }>({});
 
   const toggleIconState = (
     roleId: number,
-    iconType: 'edit' | 'close' | 'delete'
+    iconType: 'view' | 'edit' | 'close' | 'delete',
   ) => {
     setIconStates((prevState) => ({
       ...prevState,

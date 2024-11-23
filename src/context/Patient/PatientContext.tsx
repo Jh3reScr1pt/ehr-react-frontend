@@ -13,7 +13,7 @@ import {
   getPatientRequest,
   updatePatientRequest,
   updatePatientStateRequest,
-} from '../../api/patient';
+} from '../../api/patients';
 
 export const PatientContext = createContext<PatientContextValue>({
   patient: [],

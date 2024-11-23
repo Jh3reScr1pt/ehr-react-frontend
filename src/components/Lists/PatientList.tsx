@@ -8,12 +8,12 @@ import PatientCard from '../Cards/PatientCard'; // Asegúrate de que la ruta sea
 const PatientList = () => {
   const { patient, loading, error } = usePatients();
   const {
+    handleViewClick,
     handleEditClick,
     handleDeactivate,
     handleReload,
     handleDelete,
     handleInfoPersonalSearch,
-    //handleView,
   } = usePatientHandlers();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -43,7 +43,7 @@ const PatientList = () => {
           <PatientCard
             key={p.id}
             patient={p}
-            //onView={handleView}
+            onView={handleViewClick}
             onEdit={handleEditClick}
             onDeactivate={handleDeactivate}
             onActivate={handleReload}

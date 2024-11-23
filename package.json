@@ -13,6 +13,7 @@
     "apexcharts": "^3.41.0",
     "dotenv": "^16.4.5",
     "flatpickr": "^4.6.13",
+    "flyonui": "^1.1.0",
     "frontend-react-ehr": "file:",
     "headlessui": "^0.0.0",
     "jsvectormap": "^1.5.3",

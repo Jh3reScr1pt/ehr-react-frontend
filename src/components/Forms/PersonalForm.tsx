@@ -197,7 +197,47 @@ const PersonalForm = () => {
                   onChange={handleRoleChange}
                 />
 
-                <div className="flex justify-end gap-4.5 mt-4">
+                
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-9">
+            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+              <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
+                <h3 className="font-medium text-black dark:text-white">
+                  Credenciales de Acceso
+                </h3>
+              </div>
+              <div className="p-6.5">
+                {/* Email */}
+                <div className="mb-4.5">
+                  <label className="mb-2.5 block text-black dark:text-white">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    readOnly
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                  />
+                </div>
+                {/* Password */}
+                <div className="mb-4.5">
+                  <label className="mb-2.5 block text-black dark:text-white">
+                    Contraseña generada
+                  </label>
+                  <input
+                    type="text"
+                    name="password"
+                    value={password}
+                    readOnly
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end gap-4.5 mt-0">
                   {!id ? (
                     <>
                       <button
@@ -232,46 +272,8 @@ const PersonalForm = () => {
                     </>
                   )}
                 </div>
-              </div>
-            </div>
           </div>
-
-          <div className="flex flex-col gap-9">
-            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-              <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-                <h3 className="font-medium text-black dark:text-white">
-                  Credenciales de Acceso
-                </h3>
-              </div>
-              <div className="p-6.5">
-                {/* Password */}
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    value={email}
-                    readOnly
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
-                  />
-                </div>
-                {/* Password */}
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">
-                    Contraseña generada
-                  </label>
-                  <input
-                    type="text"
-                    name="password"
-                    value={password}
-                    readOnly
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary dark:border-form-strokedark dark:bg-form-input dark:text-white"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </form>
     </>

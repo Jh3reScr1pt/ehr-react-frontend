@@ -58,7 +58,6 @@ export const PersonalProvider: React.FC<Props> = ({ children }) => {
     fetchPersonal();
   }, []);
 
-  // Función para obtener un rol
   const getPersonal = async (id: number): Promise<Personal> => {
     try {
       const personal = await getPersonalRequest(id);

@@ -9,13 +9,14 @@ import {
   EditOutlined,
   ReloadOutlined,
   EyeOutlined,
+  EyeFilled,
 } from '@ant-design/icons';
 import { Patient } from '../../interfaces/Patient/patient.interface';
 import { useIconToggles } from '../../hooks/useIconToggles';
 
 interface PatientCardProps {
   patient: Patient;
-  //onView: (id: number) => void;
+  onView: (id: number) => void;
   onEdit: (id: number) => void;
   onDeactivate: (id: number) => void;
   onActivate: (id: number) => void;
@@ -24,7 +25,7 @@ interface PatientCardProps {
 
 const PatientCard: React.FC<PatientCardProps> = ({
   patient,
-  //onView,
+  onView,
   onEdit,
   onDeactivate,
   onActivate,
@@ -43,7 +44,7 @@ const PatientCard: React.FC<PatientCardProps> = ({
     return age;
   };
 
-  const edad = calculateAge(patient.birth_date);
+  const age = calculateAge(patient.birth_date);
 
   return (
     <div className="max-w-sm mb-5 p-4 bg-white border-stroke rounded-lg shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -58,7 +59,7 @@ const PatientCard: React.FC<PatientCardProps> = ({
             {patient.first_name} {patient.second_name}
           </h5>
           <span className="text-sm text-gray-500 dark:text-gray-400">
-            CI: {patient.ci} | Edad: {edad}
+            CI: {patient.ci} | Edad: {age}
           </span>
         </div>
       </div>
@@ -67,10 +68,15 @@ const PatientCard: React.FC<PatientCardProps> = ({
         {patient.isActive ? (
           <>
             <button
-              //onClick={() => onView(patient.id)}
+              onMouseDown={() => toggleIconState(patient.id, 'view')}
+              onMouseUp={() => {
+                toggleIconState(patient.id, 'view');
+                onView(patient.id);
+              }}
               className="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
             >
-              <EyeOutlined /> Vista
+              {iconStates[patient.id]?.edit ? <EyeFilled /> : <EyeOutlined />}{' '}
+              Vista
             </button>
 
             {/* Botón de Editar */}

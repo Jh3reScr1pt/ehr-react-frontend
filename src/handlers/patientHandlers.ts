@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useToasts } from '../hooks/useToasts';
 import { useEffect, useState, ChangeEvent, FormEvent } from 'react';
-import { CreatePersonal } from '../interfaces/Personal/personal.interface';
 import { usePatients } from '../context/Patient/UsePatient';
+import { CreatePatient } from '../interfaces/Patient/patient.interface';
 
 export const usePatientHandlers = () => {
   const {
@@ -15,8 +15,12 @@ export const usePatientHandlers = () => {
   const { ToastSuccess, ToastInfo, ToastError } = useToasts();
   const navigate = useNavigate();
 
+  const handleViewClick = (patientId: number) => {
+    navigate(`/patient/profile/${patientId}`);
+  };
+
   const handleEditClick = (patientId: number) => {
-    navigate(`/patients/edit/${patientId}`);
+    navigate(`/patient/edit/${patientId}`);
   };
 
   const handleDeactivate = async (patientId: number) => {
@@ -92,7 +96,7 @@ export const usePatientHandlers = () => {
             });
           } catch (err) {
             setFeedback({
-              error: 'Error cargando los datos del rol.',
+              error: 'Error cargando los datos del paciente.',
               success: null,
             });
           }
@@ -129,7 +133,7 @@ export const usePatientHandlers = () => {
         if (success) {
           setFeedback({ success: message, error: null });
           ToastSuccess(answer);
-          navigate('/patients/list');
+          navigate('/patient/list');
         } else {
           setFeedback({ error: message, success: null });
           ToastError(message);
@@ -143,10 +147,10 @@ export const usePatientHandlers = () => {
     };
 
     const handleCancel = () => {
-      navigate('/patients/list');
+      navigate('/patient/list');
     };
 
-    const validateNames = (personal: CreatePersonal) => {
+    const validateNames = (personal: CreatePatient) => {
       const { first_name, first_last_name, second_last_name } = personal;
       const isNamesFilled =
         first_name.length > 0 &&
@@ -161,14 +165,30 @@ export const usePatientHandlers = () => {
       return isNamesFilled && areNamesValid;
     };
 
-    const shouldDisableFields = (personal: CreatePersonal) => {
-      const areNamesValid = validateNames(personal);
+    const shouldDisableFields = (patient: CreatePatient) => {
+      const areNamesValid = validateNames(patient);
       return !areNamesValid;
     };
 
     const validateCI = (ci: string) => {
       const ciRegex = /^\d+$/; // Solo números
       return ci && ciRegex.test(ci);
+    };
+
+    const calculateAge = (birthDate: string): string => {
+      const birth = new Date(birthDate);
+      const today = new Date();
+      let age = today.getFullYear() - birth.getFullYear();
+      const monthDiff = today.getMonth() - birth.getMonth();
+
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birth.getDate())
+      ) {
+        age--;
+      }
+
+      return age.toString();
     };
 
     return {
@@ -180,10 +200,12 @@ export const usePatientHandlers = () => {
       validateNames,
       shouldDisableFields,
       validateCI,
+      calculateAge,
     };
   };
 
   return {
+    handleViewClick,
     handleEditClick,
     handleDeactivate,
     handleReload,
