@@ -940,6 +940,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </ul>
           </div>
           {/* <!-- Admin Appointments Section --> */}
+          {/* <!--
           <div>
             <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
               ADMIN. CITAS MÉDICAS
@@ -1038,6 +1039,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </SidebarLinkGroup>
             </ul>
           </div>
+          --> */}
           {/* <!-- Admin Health Records Section --> */}
           <div>
             <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
