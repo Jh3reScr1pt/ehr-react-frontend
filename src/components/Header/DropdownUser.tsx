@@ -1,12 +1,30 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ClickOutside from '../ClickOutside';
-import UserOne from '../../images/user/user-01.png';
+import AdminUser from '../../images/profile_images/admin.png';
+import DoctorUser from '../../images/profile_images/doctor.png';
+import NurseUser from '../../images/profile_images/nurse.png';
+import ReceptionUser from '../../images/profile_images/reception.png';
 import { useAuth } from '../../context/Auth/useAuth';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { logout, userfullname, role } = useAuth();
+  // Seleccionar la imagen según el rol
+  const getProfileImage = () => {
+    switch (role.toLowerCase()) {
+      case 'admin':
+        return AdminUser;
+      case 'médico':
+        return DoctorUser;
+      case 'enfermero':
+        return NurseUser;
+      case 'recepción':
+        return ReceptionUser;
+      default:
+        return AdminUser; // Imagen predeterminada si el rol no coincide
+    }
+  };
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
       <Link
@@ -22,7 +40,7 @@ const DropdownUser = () => {
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
+          <img src={getProfileImage()} alt="User" />
         </span>
 
         <svg
@@ -47,6 +65,7 @@ const DropdownUser = () => {
         <div
           className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}
         >
+          {/* <!-- 
           <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
             <li>
               <Link
@@ -99,6 +118,7 @@ const DropdownUser = () => {
               </Link>
             </li>
           </ul>
+          --> */}
           <button
             onClick={logout} // Integrar la función de logout aquí
             className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"

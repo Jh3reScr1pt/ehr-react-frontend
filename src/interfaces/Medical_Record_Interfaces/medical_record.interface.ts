@@ -11,6 +11,46 @@ export interface MedicalRecord {
   updatedAt: Date;
 }
 
+export interface MedicalRecordInfo {
+  medicalRecordId: number;
+  code: string;
+  reason: string;
+  finalDiagnosis: string;
+  symptoms: {
+    symptom: string;
+    severity: string;
+  }[];
+  vitalSigns: {
+    sign: string;
+    value: string;
+  }[];
+  patient: {
+    id: number;
+    fullName: string;
+    ci: string;
+    phone_number: string;
+    address: string;
+    age: number;
+    birth_date: string;
+  };
+  treatments: {
+    id: number;
+    medication: string;
+    notes: string;
+  }[];
+  presumptiveDiagnosis: {
+    id: number;
+    probability: string;
+    diseaseGroup: {
+      name: string;
+      diseases: {
+        name: string;
+        codeCie: string;
+      }[];
+    };
+  }[];
+}
+
 export type CreateMedicalRecord = Omit<
   MedicalRecord,
   'id' | 'createdAt' | 'updatedAt'

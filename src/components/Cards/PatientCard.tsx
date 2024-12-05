@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import { Patient } from '../../interfaces/Patient/patient.interface';
 import { useIconToggles } from '../../hooks/useIconToggles';
+import PatientUser from '../../images/profile_images/patient.png';
 
 interface PatientCardProps {
   patient: Patient;
@@ -51,7 +52,7 @@ const PatientCard: React.FC<PatientCardProps> = ({
       <div className="flex items-center space-x-4">
         <img
           className="w-12 h-12 rounded-full"
-          src={'https://randomuser.me/api/portraits/men/1.jpg'} // Imagen por defecto si no hay
+          src={PatientUser} // Imagen por defecto si no hay
           alt={`${patient.first_name} ${patient.second_name}`}
         />
         <div className="flex-1">

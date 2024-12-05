@@ -45,6 +45,7 @@ const RoleList = () => {
         onSearchClick={handleInfoRoleSearch}
         createRoute="/role/create"
         createButtonText="Crear Rol"
+        showCreateButton={false}
       />
 
       {/* Tabla */}

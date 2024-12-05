@@ -10,6 +10,7 @@ const API_URL_DIAGNOSIS = `${API_URL}/diagnosis`;
 const API_URL_DISEASE_GROUP = `${API_URL}/diseases-group`;
 const API_URL_TREATMENT = `${API_URL}/treatments`;
 const API_URL_MEDICAL_RECORDS_PATIENTS = `${API_URL_MEDICAL_RECORD}/medical_records_patients`;
+const API_URL_MEDICAL_RECORD_PATIENT = `${API_URL_MEDICAL_RECORD}/medical_record_patient`;
 
 // Crear un registro médico
 export const createMedicalRecord = async (
@@ -244,6 +245,40 @@ export const getMedicalRecordsByPatientId = async (patientId: number) => {
     return data;
   } catch (error) {
     console.error('Error en getMedicalRecordsByPatientId:', error);
+    throw error;
+  }
+};
+
+// Función para obtener registros médicos por patientId
+export const getMedicalRecordInfoByMedicalRecordId = async (
+  medicalRecordId: number,
+) => {
+  try {
+    const response = await fetch(
+      `${API_URL_MEDICAL_RECORD_PATIENT}/${medicalRecordId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: 'xyz123',
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw {
+        status: response.status,
+        message:
+          errorData.message ||
+          `Error al obtener registros médicos para el paciente con ID "${medicalRecordId}}"`,
+      };
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error en getMedicalRecordInfoByMedicalRecordId:', error);
     throw error;
   }
 };

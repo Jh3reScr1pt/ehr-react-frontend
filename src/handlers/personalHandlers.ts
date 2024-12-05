@@ -4,6 +4,7 @@ import { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { usePersonal } from '../context/Personal/usePersonal';
 import { CreatePersonal } from '../interfaces/Personal/personal.interface';
 
+
 export const usePersonalHandlers = () => {
   const {
     updatePersonalState,
@@ -14,6 +15,7 @@ export const usePersonalHandlers = () => {
   } = usePersonal();
   const { ToastSuccess, ToastInfo, ToastError } = useToasts();
   const navigate = useNavigate();
+  
 
   const handleEditClick = (personalId: number) => {
     navigate(`/personal/edit/${personalId}`);
@@ -104,7 +106,9 @@ export const usePersonalHandlers = () => {
     }, [id]);
 
     const handleChange = (
-      e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+      e: ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >,
     ) => {
       const { name, value } = e.target;
       setPersonal((prev) => ({ ...prev, [name]: value }));
@@ -125,7 +129,11 @@ export const usePersonalHandlers = () => {
           response = await updatePersonal(Number(id), personal);
           answer = 'Cambios guardados';
         } else {
+
+          // Crear al personal
           response = await createPersonal(personal);
+
+
           answer = 'Personal creado exitosamente';
         }
 

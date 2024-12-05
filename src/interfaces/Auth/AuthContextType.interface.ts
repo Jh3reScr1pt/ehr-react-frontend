@@ -5,6 +5,7 @@ export interface AuthContextType {
   role: string;
   permissions: string[];
   message: string;
+  token: string | null;
   login: (auth: Authentication) => Promise<void>;
   logout: () => void;
 }

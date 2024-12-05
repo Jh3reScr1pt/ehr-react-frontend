@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { IStaticMethods } from 'flyonui/flyonui';
 
@@ -51,7 +51,10 @@ import EditAppointment from './pages/AdminAppointments/Appointments/Edit';
 // HEALTH RECORDS
 import CreateHealthRecord from './pages/AdminHealthRecords/HealthRecords/Create';
 import ListHealthRecords from './pages/AdminHealthRecords/HealthRecords/List';
-import EditHealthRecord from './pages/AdminHealthRecords/HealthRecords/Edit';
+import ViewHealthRecord from './pages/AdminHealthRecords/HealthRecords/View';
+
+import { useAuth } from './context/Auth/useAuth';
+import Home from './pages/Dashboard/Home';
 
 declare global {
   interface Window {
@@ -62,6 +65,7 @@ declare global {
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
+  const { token } = useAuth(); // Obtener el token del contexto
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -90,10 +94,14 @@ function App() {
           <Route
             path="/auth/signin"
             element={
-              <>
-                <PageTitle title="Signin | Centro Médico ZOE" />
-                <SignIn />
-              </>
+              token ? ( // Si el token existe, redirige a "/"
+                <Navigate to="/" replace />
+              ) : (
+                <>
+                  <PageTitle title="Inicio de Sesión | Centro Médico ZOE" />
+                  <SignIn />
+                </>
+              )
             }
           />
 
@@ -102,10 +110,16 @@ function App() {
           <Route
             path="/"
             element={
-              <ProtectedRoute permission="MANAGE_PERSONAL">
+              <ProtectedRoute
+                permissions={[
+                  'MANAGE_PERSONAL',
+                  'MANAGE_COMPONENTS',
+                  'VIEW_PATIENTS',
+                ]}
+              >
                 <DefaultLayout>
-                  <PageTitle title="EHR | Centro Médico ZOE" />
-                  <ECommerce />
+                  <PageTitle title="Centro Médico ZOE" />
+                  <Home />
                 </DefaultLayout>
               </ProtectedRoute>
             }
@@ -113,82 +127,100 @@ function App() {
           <Route
             path="/calendar"
             element={
-              <DefaultLayout>
-                <PageTitle title="Calendar | Centro Médico ZOE" />
-                <Calendar />
-              </DefaultLayout>
+              <ProtectedRoute permissions={['MANAGE_COMPONENTS']}>
+                <DefaultLayout>
+                  <PageTitle title="Calendar | Centro Médico ZOE" />
+                  <Calendar />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/profile"
             element={
-              <DefaultLayout>
-                <PageTitle title="Profile | Centro Médico ZOE" />
-                <Profile />
-              </DefaultLayout>
+              <ProtectedRoute permissions={['MANAGE_COMPONENTS']}>
+                <DefaultLayout>
+                  <PageTitle title="Profile | Centro Médico ZOE" />
+                  <Profile />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/forms/form-elements"
             element={
-              <DefaultLayout>
-                <PageTitle title="Form Elements | Centro Médico ZOE" />
-                <FormElements />
-              </DefaultLayout>
+              <ProtectedRoute permissions={['MANAGE_COMPONENTS']}>
+                <DefaultLayout>
+                  <PageTitle title="Form Elements | Centro Médico ZOE" />
+                  <FormElements />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/forms/form-layout"
             element={
-              <DefaultLayout>
-                <PageTitle title="Form Layout | Centro Médico ZOE" />
-                <FormLayout />
-              </DefaultLayout>
+              <ProtectedRoute permissions={['MANAGE_COMPONENTS']}>
+                <DefaultLayout>
+                  <PageTitle title="Form Layout | Centro Médico ZOE" />
+                  <FormLayout />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/tables"
             element={
-              <DefaultLayout>
-                <PageTitle title="Tables | Centro Médico ZOE" />
-                <Tables />
-              </DefaultLayout>
+              <ProtectedRoute permissions={['MANAGE_COMPONENTS']}>
+                <DefaultLayout>
+                  <PageTitle title="Tables | Centro Médico ZOE" />
+                  <Tables />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/settings"
             element={
-              <DefaultLayout>
-                <PageTitle title="Settings | Centro Médico ZOE" />
-                <Settings />
-              </DefaultLayout>
+              <ProtectedRoute permissions={['MANAGE_COMPONENTS']}>
+                <DefaultLayout>
+                  <PageTitle title="Settings | Centro Médico ZOE" />
+                  <Settings />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/chart"
             element={
-              <DefaultLayout>
-                <PageTitle title="Basic Chart | Centro Médico ZOE" />
-                <Chart />
-              </DefaultLayout>
+              <ProtectedRoute permissions={['MANAGE_COMPONENTS']}>
+                <DefaultLayout>
+                  <PageTitle title="Basic Chart | Centro Médico ZOE" />
+                  <Chart />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/ui/alerts"
             element={
-              <DefaultLayout>
-                <PageTitle title="Alerts | Centro Médico ZOE" />
-                <Alerts />
-              </DefaultLayout>
+              <ProtectedRoute permissions={['MANAGE_COMPONENTS']}>
+                <DefaultLayout>
+                  <PageTitle title="Alerts | Centro Médico ZOE" />
+                  <Alerts />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/ui/buttons"
             element={
-              <DefaultLayout>
-                <PageTitle title="Buttons | Centro Médico ZOE" />
-                <Buttons />
-              </DefaultLayout>
+              <ProtectedRoute permissions={['MANAGE_COMPONENTS']}>
+                <DefaultLayout>
+                  <PageTitle title="Buttons | Centro Médico ZOE" />
+                  <Buttons />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
 
@@ -197,28 +229,43 @@ function App() {
           <Route
             path="/personal/create"
             element={
-              <DefaultLayout>
-                <PageTitle title="Crear Personal | Centro Médico ZOE" />
-                <CreatePersonal />
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL']}
+                requireAll={true}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Crear Personal | Centro Médico ZOE" />
+                  <CreatePersonal />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/personal/list"
             element={
-              <DefaultLayout>
-                <PageTitle title="Lista de Personal | Centro Médico ZOE" />
-                <ListPersonal />
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL']}
+                requireAll={true}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Lista de Personal | Centro Médico ZOE" />
+                  <ListPersonal />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/personal/edit/:id"
             element={
-              <DefaultLayout>
-                <PageTitle title="Editar Personal | Centro Médico ZOE" />
-                <EditPersonal />
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL']}
+                requireAll={true}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Editar Personal | Centro Médico ZOE" />
+                  <EditPersonal />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
 
@@ -226,33 +273,47 @@ function App() {
           <Route
             path="/role/create"
             element={
-              <DefaultLayout>
-                <PageTitle title="Crear Rol | Centro Médico ZOE" />
-                <CreateRole />
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL']}
+                requireAll={true}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Crear Rol | Centro Médico ZOE" />
+                  <CreateRole />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/role/list"
             element={
-              <DefaultLayout>
-                <PageTitle title="Lista de Roles | Centro Médico ZOE" />
-                <ListRoles />
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL']}
+                requireAll={true}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Lista de Roles | Centro Médico ZOE" />
+                  <ListRoles />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/role/edit/:id"
             element={
-              <DefaultLayout>
-                <PageTitle title="Editar Rol | Centro Médico ZOE" />
-                <EditRole />
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL']}
+                requireAll={true}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Editar Rol | Centro Médico ZOE" />
+                  <EditRole />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
 
           {/* <!-- Specialty Section --> */}
-
           <Route
             path="/specialty/create"
             element={
@@ -285,37 +346,53 @@ function App() {
           <Route
             path="/patient/create"
             element={
-              <DefaultLayout>
-                <PageTitle title="Registrar Paciente | Centro Médico ZOE" />
-                <CreatePatient />
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL', 'CREATE_PATIENTS']}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Registrar Paciente | Centro Médico ZOE" />
+                  <CreatePatient />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/patient/list"
             element={
-              <DefaultLayout>
-                <PageTitle title="Lista de Pacientes | Centro Médico ZOE" />
-                <ListPatients />
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL', 'VIEW_PATIENTS']}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Lista de Pacientes | Centro Médico ZOE" />
+                  <ListPatients />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/patient/edit/:id"
             element={
-              <DefaultLayout>
-                <PageTitle title="Editar Información del Paciente | Centro Médico ZOE" />
-                <EditPatient />
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL', 'EDIT_PATIENTS']}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Editar Información del Paciente | Centro Médico ZOE" />
+                  <EditPatient />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/patient/profile/:id"
             element={
-              <DefaultLayout>
-                <PageTitle title="Información del Paciente | Centro Médico ZOE" />
-                <ProfilePatient />
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL', 'CONSULT_PATIENT_INFO']}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Información del Paciente | Centro Médico ZOE" />
+                  <ProfilePatient />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           {/* <!-- Appointment Section --> */}
@@ -350,10 +427,14 @@ function App() {
           <Route
             path="/health_record/create/:id"
             element={
-              <DefaultLayout>
-                <PageTitle title="Crear Historia Clínica | Centro Médico ZOE" />
-                <CreateHealthRecord />
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL', 'CREATE_CLINICAL_HISTORY']}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Crear Historia Clínica | Centro Médico ZOE" />
+                  <CreateHealthRecord />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
           <Route
@@ -366,12 +447,16 @@ function App() {
             }
           />
           <Route
-            path="/health_record/edit/:id"
+            path="/health_record/view/:id"
             element={
-              <DefaultLayout>
-                <PageTitle title="Editar Historia Clínica | Centro Médico ZOE" />
-                <EditHealthRecord/>
-              </DefaultLayout>
+              <ProtectedRoute
+                permissions={['MANAGE_PERSONAL', 'REVIEW_CLINICAL_HISTORY']}
+              >
+                <DefaultLayout>
+                  <PageTitle title="Ver Historia Clínica | Centro Médico ZOE" />
+                  <ViewHealthRecord />
+                </DefaultLayout>
+              </ProtectedRoute>
             }
           />
         </Routes>

@@ -8,17 +8,19 @@ import {
   getActiveMedicalRecordsWithPatients,
   findDiseaseGroupByName,
   getMedicalRecordsByPatientId,
+  getMedicalRecordInfoByMedicalRecordId,
 } from '../../api/medical_records';
 import {
   CreateMedicalRecord,
   MedicalRecord,
+  MedicalRecordInfo,
 } from '../../interfaces/Medical_Record_Interfaces/medical_record.interface';
 import { CreateDiagnosis } from '../../interfaces/Medical_Record_Interfaces/diagnosis.interface';
 import { CreateDiseaseGroup } from '../../interfaces/Medical_Record_Interfaces/disease_group.interface';
 import { CreateTreatment } from '../../interfaces/Medical_Record_Interfaces/treatment.interface';
 
 export interface MedicalRecordContextValue {
-  medicalRecords: MedicalRecord[];
+  medicalRecords: MedicalRecordInfo[];
   loading: boolean;
   error: string | null;
   createMedicalRecord: (
@@ -52,6 +54,9 @@ export interface MedicalRecordContextValue {
     treatment: any;
   }>;
   getMedicalRecordsByPatientId: (patientId: number) => Promise<MedicalRecord[]>;
+  getMedicalRecordInfoByMedicalRecordId: (
+    medicalRecordId: number,
+  ) => Promise<MedicalRecordInfo>;
 }
 
 export const MedicalRecordContext = createContext<MedicalRecordContextValue>({
@@ -84,10 +89,15 @@ export const MedicalRecordContext = createContext<MedicalRecordContextValue>({
   getMedicalRecordsByPatientId: async () => {
     throw new Error('getMedicalRecordsByPatientId() no está implementado');
   },
+  getMedicalRecordInfoByMedicalRecordId: async () => {
+    throw new Error(
+      'getMedicalRecordInfoByMedicalRecordId() no está implementado',
+    );
+  },
 });
 
 export const MedicalRecordProvider: React.FC<Props> = ({ children }) => {
-  const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([]);
+  const [medicalRecords, setMedicalRecords] = useState<MedicalRecordInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -111,6 +121,18 @@ export const MedicalRecordProvider: React.FC<Props> = ({ children }) => {
   const fetchMedicalRecordsByPatientId = async (patientId: number) => {
     try {
       const data = await getMedicalRecordsByPatientId(patientId);
+      return data;
+    } catch (err) {
+      console.error('Error obteniendo registros médicos por patientId:', err);
+      throw err;
+    }
+  };
+  // Nueva función para obtener registros médicos por patientId
+  const fetchMedicalRecordInfoByMedicalRecordId = async (
+    medicalRecordId: number,
+  ) => {
+    try {
+      const data = await getMedicalRecordInfoByMedicalRecordId(medicalRecordId);
       return data;
     } catch (err) {
       console.error('Error obteniendo registros médicos por patientId:', err);
@@ -274,6 +296,8 @@ export const MedicalRecordProvider: React.FC<Props> = ({ children }) => {
         findDiseaseGroupByName: findDiseaseGroupByNameHandler,
         registerFullMedicalRecordProcess, // Añadido a los valores del contexto
         getMedicalRecordsByPatientId: fetchMedicalRecordsByPatientId,
+        getMedicalRecordInfoByMedicalRecordId:
+          fetchMedicalRecordInfoByMedicalRecordId,
       }}
     >
       {children}

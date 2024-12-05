@@ -4,7 +4,7 @@ import { useDiagnoses } from '../../context/Fuzzy_Diagnosis/useDiagnoses';
 interface SymptomsModalProps {
   onClose: () => void;
   handleSymptomsChange: (
-    symptoms: { symptom_id: number; intensity: number }[],
+    symptoms: { symptom_id: number; name: string; intensity: number }[],
   ) => void;
   onConfirm: () => Promise<void>;
 }
@@ -16,18 +16,21 @@ const SymptomsModal: React.FC<SymptomsModalProps> = ({
 }) => {
   const { symptoms } = useDiagnoses(); // Obtenemos los síntomas directamente del contexto
   const [selectedSymptoms, setSelectedSymptoms] = useState<
-    { symptom_id: number; intensity: number }[]
-  >([{ symptom_id: 0, intensity: 0 }]); // Inicializamos con un campo vacío
+    { symptom_id: number; name: string; intensity: number }[]
+  >([{ symptom_id: 0, name: '', intensity: 0 }]); // Inicializamos con un campo vacío
 
   useEffect(() => {
     handleSymptomsChange(selectedSymptoms);
   }, [selectedSymptoms, handleSymptomsChange]);
 
   const handleOptionChange = (index: number, symptom_id: number) => {
+    const symptomName =
+      symptoms.find((symptom) => symptom.id === symptom_id)?.name || '';
     const updatedSymptoms = [...selectedSymptoms];
     updatedSymptoms[index] = {
       ...updatedSymptoms[index],
       symptom_id,
+      name: symptomName, // Agrega el nombre del síntoma
     };
     setSelectedSymptoms(updatedSymptoms);
   };
@@ -45,7 +48,7 @@ const SymptomsModal: React.FC<SymptomsModalProps> = ({
     if (selectedSymptoms.length < 4) {
       setSelectedSymptoms([
         ...selectedSymptoms,
-        { symptom_id: 0, intensity: 0 },
+        { symptom_id: 0, name: '', intensity: 0 },
       ]);
     }
   };

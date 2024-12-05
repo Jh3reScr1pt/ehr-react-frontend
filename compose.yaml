@@ -9,8 +9,8 @@
 # https://github.com/docker/awesome-compose
 services:
   server:
-    container_name: frontend-react-v2
-    image: jh3re404/frontend-react-ehr-server:v2
+    container_name: frontend-react-v3
+    image: jh3re404/frontend-react-ehr-server:v3
     build:
       context: .  # Asegúrate de que esto sea correcto
     environment:

@@ -41,7 +41,7 @@ const HealthRecordForm = () => {
   });
 
   const [selectedSymptoms, setSelectedSymptoms] = useState<
-    { symptom_id: number; intensity: number }[]
+    { symptom_id: number; name: string; intensity: number }[]
   >([]);
 
   const { createDiagnosis } = useDiagnoses();
@@ -80,7 +80,7 @@ const HealthRecordForm = () => {
   };
 
   const handleSymptomsChange = (
-    updatedSymptoms: { symptom_id: number; intensity: number }[],
+    updatedSymptoms: { symptom_id: number; name: string; intensity: number }[],
   ) => {
     setSelectedSymptoms(updatedSymptoms);
   };
@@ -104,6 +104,14 @@ const HealthRecordForm = () => {
     e.preventDefault();
 
     try {
+      const vitalSignsLabels = {
+        blood_pressure: 'Presión arterial',
+        heart_rate: 'Frecuencia cardiaca',
+        respiratory_rate: 'Frecuencia respiratoria',
+        temperature: 'Temperatura',
+        weight: 'Peso',
+      };
+
       const medicalRecordData = {
         patientId: Number(id),
         reason,
@@ -111,9 +119,12 @@ const HealthRecordForm = () => {
         symptomsInformation: selectedSymptoms
           .map(
             (symptom) =>
-              `Symptom-${symptom.symptom_id}-Intensity-${symptom.intensity}`,
+              `${symptom.name} - ${
+                ['Baja', 'Media', 'Alta'][symptom.intensity - 1]
+              }`,
           )
           .join(','),
+
         vitalSignsInformation: Object.entries(vitalSigns)
           .map(([key, value]) => `${key}-${value}`)
           .join(','),

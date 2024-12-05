@@ -8,6 +8,7 @@ const SearchAndCreateBar: React.FC<SearchAndCreateBarProps> = ({
   onSearchClick,
   createButtonText = 'Crear',
   createRoute,
+  showCreateButton = true, // Por defecto, el botón se mostrará
 }) => {
   const navigate = useNavigate();
 
@@ -55,13 +56,15 @@ const SearchAndCreateBar: React.FC<SearchAndCreateBarProps> = ({
       </form>
 
       {/* Botón de crear */}
-      <button
-        onClick={() => navigate(createRoute)}
-        className="flex items-center gap-2.5 rounded-md bg-meta-3 py-2 px-6 text-center font-medium text-white hover:bg-opacity-90 transition"
-      >
-        <PlusOutlined />
-        {createButtonText}
-      </button>
+      {showCreateButton && (
+        <button
+          onClick={() => navigate(createRoute)}
+          className="flex items-center gap-2.5 rounded-md bg-meta-3 py-2 px-6 text-center font-medium text-white hover:bg-opacity-90 transition"
+        >
+          <PlusOutlined />
+          {createButtonText}
+        </button>
+      )}
     </div>
   );
 };

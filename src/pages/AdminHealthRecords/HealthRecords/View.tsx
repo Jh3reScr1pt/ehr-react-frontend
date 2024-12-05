@@ -1,16 +1,15 @@
 import Breadcrumb from '../../../components/Breadcrumbs/Breadcrumb';
-import HealthRecordList from '../../../components/Lists/HealthRecordList';
+import HealthRecordViewForm from '../../../components/Forms/HealthRecordViewForm';
 import { MedicalRecordProvider } from '../../../context/MedicalRecord/MedicalRecordContext';
 
-const List = () => {
+const View = () => {
   return (
     <>
-      <Breadcrumb pageName="Historias Clínicas" />
+      <Breadcrumb pageName="Ver Historia Clínica" />
       <MedicalRecordProvider>
-        <HealthRecordList />
+        <HealthRecordViewForm />
       </MedicalRecordProvider>
     </>
   );
 };
-
-export default List;
+export default View;

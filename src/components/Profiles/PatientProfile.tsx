@@ -226,6 +226,11 @@ const PatientProfile = () => {
                     <li
                       key={record.medicalRecordId}
                       className="flex items-start sm:items-center p-3 first:rounded-t-md last:rounded-b-md"
+                      onClick={() =>
+                        navigate(
+                          `/health_record/view/${record.medicalRecordId}`,
+                        )
+                      }
                     >
                       <img
                         src="https://media.istockphoto.com/id/922551734/es/vector/m%C3%A9dica-cruz-blanca.jpg?s=612x612&w=0&k=20&c=w13NgznHG_s7O4To1U4lV1SUTtH0f4mq9-NE4VHVbwU="

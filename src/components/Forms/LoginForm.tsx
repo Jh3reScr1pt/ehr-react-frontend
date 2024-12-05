@@ -17,7 +17,7 @@ const LoginForm = () => {
     const authData: Authentication = { email, password };
 
     try {
-      await login(authData); 
+      await login(authData);
       navigate('/');
     } catch (err) {
       console.log(err);
@@ -71,12 +71,6 @@ const LoginForm = () => {
                 placeholder="Ingresa tu contraseña"
                 className="w-full p-4 mt-2 bg-gray-100 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none "
               />
-            </div>
-
-            <div className="flex items-center justify-between mb-6">
-              <Link to="#" className="text-sm text-primary hover:underline">
-                ¿Olvidaste tu contraseña?
-              </Link>
             </div>
 
             <div>
